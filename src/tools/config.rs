@@ -1,3 +1,5 @@
+use std::fs;
+
 static mut INSTANCE: Option<Config> = None;
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -12,19 +14,36 @@ pub struct Config {
     pub event_trigger_time: String,
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            subscribed_money: 0.0,
+            subscribed_count: 0,
+            expand_rate: 0.0,
+            bot_token: "".to_string(),
+            group_chat_id: 0,
+            used_data_url: "".to_string(),
+            exchange_rate_url: "".to_string(),
+            event_trigger_time: "".to_string(),
+        }
+    }
+}
+
 impl Config {
     fn new() -> Config {
-        // let file_content =
-        //     fs::read_to_string("./config.json").expect("LogRocket: error reading file");
-        Config {
-            subscribed_money: 1.0,
-            expand_rate: 1.0,
-            subscribed_count: 1,
-            bot_token: "114514".to_string(),
-            group_chat_id: 114514,
-            used_data_url: "https://www.baidu.com".to_string(),
-            exchange_rate_url: "https://www.baidu.com".to_string(),
-            event_trigger_time: "1/10 0* * * * ?".to_string(),
+        let file_content =
+            fs::read_to_string("./config.json").expect("LogRocket: error reading config file");
+        match serde_json::from_str::<Config>(&file_content) {
+            Ok(parsed_json) => {
+                // println!("Config: {}", serde_json::to_string(&parsed_json).unwrap());
+                return parsed_json;
+            }
+            Err(e) => {
+                assert!(true, "Error parsing JSON: {}", e);
+                return Config {
+                    ..Default::default()
+                };
+            }
         }
     }
 }

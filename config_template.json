@@ -1,0 +1,10 @@
+{
+    "subscribed_money": 1.0,
+    "subscribed_count": 10,
+    "expand_rate": 1.0,
+    "bot_token": "your_token",
+    "group_chat_id": 1145141919810,
+    "used_data_url": "your_used_data_url",
+    "exchange_rate_url": "your_exchange_rate_url",
+    "event_trigger_time": "1/10 0 0 0 * ?"
+}
