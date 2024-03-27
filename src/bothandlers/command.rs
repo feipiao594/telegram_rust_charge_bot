@@ -1,9 +1,36 @@
 use super::ChatState;
 use crate::data::*;
-use mobot::{api::SendMessageRequest, *};
+use crate::tools::config;
+use mobot::{
+    api::{SendChatActionRequest, SendMessageRequest},
+    *,
+};
 
-pub async fn help_command(e: Event, _: State<ChatState>) -> Result<Action, anyhow::Error> {
+fn is_in_group(e: &Event) -> bool {
+    let id = e.update.chat_id().unwrap();
+    if id == config::get_instance().group_chat_id {
+        return true;
+    }
+    for &i in &config::get_instance().subscribed_id_list {
+        println!("{} {}", id, i);
+        if id == i {
+            println!("yep");
+            return true;
+        }
+    }
+    false
+}
+
+pub async fn help_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
+    // println!("help_command");
     let chat_id = e.update.chat_id()?;
+    e.api
+        .send_chat_action(&SendChatActionRequest::new(
+            chat_id,
+            api::ChatAction::Typing,
+        ))
+        .await?;
+    // println!("send_message");
     e.api
         .send_message(
             &SendMessageRequest::new(
@@ -23,8 +50,18 @@ pub async fn help_command(e: Event, _: State<ChatState>) -> Result<Action, anyho
     Ok(Action::Done)
 }
 
-pub async fn exchange_rate_command(e: Event, _: State<ChatState>) -> Result<Action, anyhow::Error> {
+pub async fn exchange_rate_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
+    if !is_in_group(&e) {
+        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+    }
     let chat_id = e.update.chat_id()?;
+    e.api
+        .send_chat_action(&SendChatActionRequest::new(
+            chat_id,
+            api::ChatAction::Typing,
+        ))
+        .await?;
+    // println!("send_message");
     let message = exchangerate::get_exchange_rate().await;
     e.api
         .send_message(
@@ -36,8 +73,18 @@ pub async fn exchange_rate_command(e: Event, _: State<ChatState>) -> Result<Acti
     Ok(Action::Done)
 }
 
-pub async fn data_used_command(e: Event, _: State<ChatState>) -> Result<Action, anyhow::Error> {
+pub async fn data_used_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
+    if !is_in_group(&e) {
+        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+    }
     let chat_id = e.update.chat_id()?;
+    e.api
+        .send_chat_action(&SendChatActionRequest::new(
+            chat_id,
+            api::ChatAction::Typing,
+        ))
+        .await?;
+    // println!("send_message");
     let message = dataused::get_used_data().await;
     e.api
         .send_message(
@@ -49,9 +96,19 @@ pub async fn data_used_command(e: Event, _: State<ChatState>) -> Result<Action, 
     Ok(Action::Done)
 }
 
-pub async fn charge_cny_command(e: Event, _: State<ChatState>) -> Result<Action, anyhow::Error> {
+pub async fn charge_cny_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
+    if !is_in_group(&e) {
+        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+    }
     let chat_id = e.update.chat_id()?;
-    let message = chargecny::get_cron_charge_cny().await;
+    e.api
+        .send_chat_action(&SendChatActionRequest::new(
+            chat_id,
+            api::ChatAction::Typing,
+        ))
+        .await?;
+    // println!("send_message");
+    let message = chargecny::get_recent_charge_cny().await;
     e.api
         .send_message(
             &SendMessageRequest::new(chat_id, message)

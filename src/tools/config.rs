@@ -12,6 +12,8 @@ pub struct Config {
     pub used_data_url: String,
     pub exchange_rate_url: String,
     pub event_trigger_time: String,
+    pub max_store_charge_num: usize,
+    pub subscribed_id_list: Vec<i64>,
 }
 
 impl Default for Config {
@@ -25,6 +27,8 @@ impl Default for Config {
             used_data_url: "".to_string(),
             exchange_rate_url: "".to_string(),
             event_trigger_time: "".to_string(),
+            max_store_charge_num: 1,
+            subscribed_id_list: vec![],
         }
     }
 }
