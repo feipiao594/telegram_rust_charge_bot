@@ -5,56 +5,7 @@ on:
   - pull_request
 
 jobs:
-  #check:
-  #  strategy:
-  #    matrix:
-  #      target:
-  #        - os: linux
-  #          arch: "amd64"
-  #          rust-target: "x86_64-unknown-linux-gnu"
-  #        - os: linux
-  #          arch: "arm64"
-  #          rust-target: "aarch64-unknown-linux-gnu"
-  #        - os: darwin
-  #          arch: "amd64"
-  #          rust-target: "x86_64-apple-darwin"
-  #        - os: darwin
-  #          arch: "arm64"
-  #          rust-target: "aarch64-apple-darwin"
-  #        - os: windows
-  #          arch: "amd64"
-  #          rust-target: "x86_64-pc-windows-msvc"
-  #        - os: windows
-  #          arch: "arm64"
-  #          rust-target: "aarch64-pc-windows-msvc"
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@v4
-#
-  #    - name: Install toolchain
-  #      run: rustup toolchain install stable --profile minimal --target ${{ matrix.target.rust-target }} --no-self-update
-#
-  #    - uses: Swatinem/rust-cache@v2
-#
-  #    - run: cargo check --target ${{ matrix.target.rust-target }}
-#
-  #clippy:
-  #  needs:
-  #    - check
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@v4
-#
-  #    - name: Install toolchain
-  #      run: rustup toolchain install stable --profile minimal --component clippy --no-self-update
-#
-  #    - uses: Swatinem/rust-cache@v2
-#
-  #    - run: cargo clippy --all-targets --all-features -- -W clippy::pedantic -D warnings
-
   build:
-    # needs:
-    #   - clippy
     strategy:
       fail-fast: false
       matrix:
@@ -75,14 +26,14 @@ jobs:
             arch: "arm64"
             rust-target: "aarch64-apple-darwin"
             runs-on: macos-latest
-          - os: windows
-            arch: "amd64"
-            rust-target: "x86_64-pc-windows-msvc"
-            runs-on: windows-latest
-          - os: windows
-            arch: "arm64"
-            rust-target: "aarch64-pc-windows-msvc"
-            runs-on: windows-latest
+          # - os: windows
+          #   arch: "amd64"
+          #   rust-target: "x86_64-pc-windows-msvc"
+          #   runs-on: windows-latest
+          # - os: windows
+          #   arch: "arm64"
+          #   rust-target: "aarch64-pc-windows-msvc"
+          #   runs-on: windows-latest
     runs-on: ${{ matrix.target.runs-on }}
     name: Build and save artifact
     defaults:
