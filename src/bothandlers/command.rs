@@ -12,9 +12,7 @@ fn is_in_group(e: &Event) -> bool {
         return true;
     }
     for &i in &config::get_instance().subscribed_id_list {
-        println!("{} {}", id, i);
         if id == i {
-            println!("yep");
             return true;
         }
     }
