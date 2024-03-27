@@ -115,11 +115,11 @@ jobs:
 
       - name: Set executable filename
         id: set_filename
-        run: echo "filename=sshs-${{ matrix.target.os }}-${{ matrix.target.arch }}${{ steps.set_extension.outputs.extension }}" >> $GITHUB_OUTPUT
+        run: echo "filename=tg_charge_notion_bot-${{ matrix.target.os }}-${{ matrix.target.arch }}${{ steps.set_extension.outputs.extension }}" >> $GITHUB_OUTPUT
 
       - uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
           name: ${{ steps.set_filename.outputs.filename }}
-          path: target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}
+          path: target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}
           compression-level: 0

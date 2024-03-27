@@ -66,21 +66,21 @@ jobs:
 
       - name: Set executable filename
         id: set_filename
-        run: echo "filename=sshs-${{ matrix.target.os }}-${{ matrix.target.arch }}${{ steps.set_extension.outputs.extension }}" >> $GITHUB_OUTPUT
+        run: echo "filename=tg_charge_notion_bot-${{ matrix.target.os }}-${{ matrix.target.arch }}${{ steps.set_extension.outputs.extension }}" >> $GITHUB_OUTPUT
 
       - uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
           asset_name: ${{ steps.set_filename.outputs.filename }}
-          file: target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}
+          file: target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}
 
       - name: Compute checksums
-        run: shasum --algorithm 256 "target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}" > "target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}.sha256"
+        run: shasum --algorithm 256 "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}" > "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256"
         if: ${{ matrix.target.os != 'windows' }}
 
       - name: Compute checksums
-        run: (Get-FileHash -Algorithm SHA256 -Path "target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}").Hash | Out-File -FilePath "target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}.sha256"
+        run: (Get-FileHash -Algorithm SHA256 -Path "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}").Hash | Out-File -FilePath "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256"
         if: ${{ matrix.target.os == 'windows' }}
         shell: pwsh
 
@@ -89,4 +89,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
           asset_name: ${{ steps.set_filename.outputs.filename }}.sha256
-          file: target/${{ matrix.target.rust-target }}/release/sshs${{ steps.set_extension.outputs.extension }}.sha256
+          file: target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256
