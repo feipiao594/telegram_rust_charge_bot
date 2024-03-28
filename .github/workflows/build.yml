@@ -49,8 +49,8 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
         if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
 
-      - name: Install necessary 'Simple.pm' for Windows
-        run: cpan install XML::Simple
+      - name: Install necessary file for Windows
+        run: cpan install XML::Simple Try::Tiny Config::Simple JSON
         if: ${{ matrix.target.os == 'windows' }}
 
       - uses: Swatinem/rust-cache@v2
