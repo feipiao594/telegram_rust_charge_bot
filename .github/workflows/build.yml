@@ -50,7 +50,6 @@ jobs:
         if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
 
       - name: Install necessary 'Simple.pm' for Windows
-        id: set_extension
         run: cpan install XML::Simple
         if: ${{ matrix.target.os == 'windows' }}
 
