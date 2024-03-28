@@ -1,0 +1,92 @@
+name: Release Workflow
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - os: linux
+            arch: "amd64"
+            rust-target: "x86_64-unknown-linux-gnu"
+            runs-on: ubuntu-latest
+          - os: linux
+            arch: "arm64"
+            rust-target: "aarch64-unknown-linux-gnu"
+            runs-on: ubuntu-latest
+          - os: darwin
+            arch: "amd64"
+            rust-target: "x86_64-apple-darwin"
+            runs-on: macos-latest
+          - os: darwin
+            arch: "arm64"
+            rust-target: "aarch64-apple-darwin"
+            runs-on: macos-latest
+          # - os: windows
+          #   arch: "amd64"
+          #   rust-target: "x86_64-pc-windows-msvc"
+          #   runs-on: windows-latest
+          # - os: windows
+          #   arch: "arm64"
+          #   rust-target: "aarch64-pc-windows-msvc"
+          #   runs-on: windows-latest
+    runs-on: ${{ matrix.target.runs-on }}
+    name: Build and save artifact
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: rustup toolchain install stable --profile minimal --target ${{ matrix.target.rust-target }} --no-self-update
+
+      - name: Install cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+        if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build using cross
+        run: cross build --release --target ${{ matrix.target.rust-target }}
+        if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
+
+      - name: Build using cargo
+        run: cargo build --release --target ${{ matrix.target.rust-target }}
+        if: matrix.target.os == 'windows' || matrix.target.os == 'darwin'
+
+      - name: Set .exe extension for Windows
+        id: set_extension
+        run: echo "extension=.exe" >> $GITHUB_OUTPUT
+        if: ${{ matrix.target.os == 'windows' }}
+
+      - name: Set executable filename
+        id: set_filename
+        run: echo "filename=tg_charge_notion_bot-${{ matrix.target.os }}-${{ matrix.target.arch }}${{ steps.set_extension.outputs.extension }}" >> $GITHUB_OUTPUT
+
+      - uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          asset_name: ${{ steps.set_filename.outputs.filename }}
+          file: target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}
+
+      - name: Compute checksums
+        run: shasum --algorithm 256 "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}" > "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256"
+        if: ${{ matrix.target.os != 'windows' }}
+
+      - name: Compute checksums
+        run: (Get-FileHash -Algorithm SHA256 -Path "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}").Hash | Out-File -FilePath "target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256"
+        if: ${{ matrix.target.os == 'windows' }}
+        shell: pwsh
+
+      - uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          asset_name: ${{ steps.set_filename.outputs.filename }}.sha256
+          file: target/${{ matrix.target.rust-target }}/release/tg_charge_notion_bot${{ steps.set_extension.outputs.extension }}.sha256
