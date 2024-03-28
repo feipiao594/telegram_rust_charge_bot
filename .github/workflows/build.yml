@@ -49,11 +49,11 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
         if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
 
-      # - name: Install necessary file for Windows
-      #   run: cpan Try::Tiny Config::Simple JSON & cpan install XML::Simple 
-      #   if: ${{ matrix.target.os == 'windows' }}
-
       - uses: Swatinem/rust-cache@v2
+
+      - name: Remove openssl for Windows
+        run: cargo remove openssl
+        if: ${{ matrix.target.os == 'windows' }}
 
       - name: Build using cross
         run: cross build --release --target ${{ matrix.target.rust-target }}
