@@ -26,14 +26,14 @@ jobs:
             arch: "arm64"
             rust-target: "aarch64-apple-darwin"
             runs-on: macos-latest
-          # - os: windows
-          #   arch: "amd64"
-          #   rust-target: "x86_64-pc-windows-msvc"
-          #   runs-on: windows-latest
-          # - os: windows
-          #   arch: "arm64"
-          #   rust-target: "aarch64-pc-windows-msvc"
-          #   runs-on: windows-latest
+          - os: windows
+            arch: "amd64"
+            rust-target: "x86_64-pc-windows-msvc"
+            runs-on: windows-latest
+          - os: windows
+            arch: "arm64"
+            rust-target: "aarch64-pc-windows-msvc"
+            runs-on: windows-latest
     runs-on: ${{ matrix.target.runs-on }}
     name: Build and save artifact
     defaults:
@@ -48,6 +48,11 @@ jobs:
       - name: Install cross
         run: cargo install cross --git https://github.com/cross-rs/cross
         if: ${{ matrix.target.os != 'windows' && matrix.target.os != 'darwin' }}
+
+      - name: Install necessary 'Simple.pm' for Windows
+        id: set_extension
+        run: cpan install XML::Simple
+        if: ${{ matrix.target.os == 'windows' }}
 
       - uses: Swatinem/rust-cache@v2
 
