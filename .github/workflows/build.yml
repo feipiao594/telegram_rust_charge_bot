@@ -1,8 +1,8 @@
 name: PR Workflow
 
-on:
-  - push
-  - pull_request
+on: [push]
+  # - push
+  # - pull_request
 
 jobs:
   build:
