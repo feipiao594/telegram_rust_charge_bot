@@ -1,13 +1,15 @@
 # Tg_Charge_Notion_bot
 
+## 支持平台
 
-| Windows | Linux | MacOS |
-| ------- | ----- | ----- |
-| No      | Yes   | No    |
+|           | Windows | Linux | MacOS |
+| :-------: | :-----: | :---: | :---: |
+| **amd64** |   Yes   |  Yes  |  Yes  |
+| **arm64** |   Yes   |  Yes  |  Yes  |
 
 
 ## 简介
-基于`mobot`的tgbot，负责订阅活动的查询与提醒
+基于`mobot`的跨平台tgbot，负责订阅活动的查询与提醒
 
 ## 使用方式
 
