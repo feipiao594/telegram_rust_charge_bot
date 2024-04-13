@@ -2,4 +2,4 @@
 .vscode
 release
 config.json
-store.json
+history.json

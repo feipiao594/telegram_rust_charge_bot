@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::{
-    fs::OpenOptions,
-    io::{Read, Write},
+    fs::{self, File},
+    path::Path,
 };
 
 use super::config;
@@ -20,15 +20,11 @@ pub async fn push_charge_store(map: (String, String)) -> std::io::Result<()> {
         charge_str: charge_str.to_string(),
     };
 
-    let mut file = OpenOptions::new()
-        .create(true)
-        .write(true)
-        .read(true)
-        .append(true)
-        .open("store.json")?;
+    if !Path::new("history.json").exists() {
+        File::create("history.json").expect("Error: cannot create history file");
+    }
 
-    let mut contents = "".to_string();
-    file.read_to_string(&mut contents).unwrap();
+    let contents = fs::read_to_string("./history.json").expect("Error: read history file");
 
     let mut items: Vec<StoreItem> = if contents.trim().is_empty() {
         Vec::new()
@@ -48,21 +44,18 @@ pub async fn push_charge_store(map: (String, String)) -> std::io::Result<()> {
     items.push(item);
 
     let updated_content = serde_json::to_string_pretty(&items)?;
-    file.set_len(0).unwrap();
-    file.write_all(updated_content.as_bytes())?;
+
+    fs::write("./history.json", updated_content).expect("Error: write history file");
 
     Ok(())
 }
 
 pub async fn get_recent_store() -> std::io::Result<String> {
-    let mut file = OpenOptions::new()
-        .create(true)
-        .read(true)
-        .append(true)
-        .open("store.json")?;
+    if !Path::new("history.json").exists() {
+        File::create("history.json").expect("Error: cannot create history file");
+    }
 
-    let mut contents = "".to_string();
-    file.read_to_string(&mut contents).unwrap();
+    let contents = fs::read_to_string("./history.json").expect("Error: read history file");
 
     let items: Vec<StoreItem> = if contents.trim().is_empty() {
         Vec::new()
