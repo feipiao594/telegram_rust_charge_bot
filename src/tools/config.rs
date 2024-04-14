@@ -39,14 +39,14 @@ impl Config {
             fs::read_to_string("./config.json").expect("LogRocket: error reading config file");
         match serde_json::from_str::<Config>(&file_content) {
             Ok(parsed_json) => {
-                // println!("Config: {}", serde_json::to_string(&parsed_json).unwrap());
-                return parsed_json;
+                println!("Config: {:?}",parsed_json);
+                parsed_json
             }
-            Err(e) => {
-                assert!(true, "Error parsing JSON: {}", e);
-                return Config {
+            Err(_e) => {
+                // assert!(true, "Error parsing JSON: {}", e);
+                Config {
                     ..Default::default()
-                };
+                }
             }
         }
     }
@@ -57,6 +57,6 @@ pub fn get_instance() -> &'static Config {
         if INSTANCE.is_none() {
             INSTANCE = Some(Config::new());
         }
-        &INSTANCE.as_ref().unwrap()
+        INSTANCE.as_ref().unwrap()
     }
 }

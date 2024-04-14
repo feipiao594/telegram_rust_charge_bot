@@ -22,6 +22,7 @@ fn is_in_group(e: &Event) -> bool {
 pub async fn help_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
     // println!("help_command");
     let chat_id = e.update.chat_id()?;
+    let _help_message = &config::get_instance().help_message;
     e.api
         .send_chat_action(&SendChatActionRequest::new(
             chat_id,
@@ -50,7 +51,7 @@ pub async fn help_command(e: Event, _: State<ChatState>) -> anyhow::Result<Actio
 
 pub async fn exchange_rate_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
     if !is_in_group(&e) {
-        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+        return Ok(Action::ReplyText("抱歉，您未订阅该服务".to_owned()));
     }
     let chat_id = e.update.chat_id()?;
     e.api
@@ -73,7 +74,7 @@ pub async fn exchange_rate_command(e: Event, _: State<ChatState>) -> anyhow::Res
 
 pub async fn data_used_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
     if !is_in_group(&e) {
-        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+        return Ok(Action::ReplyText("抱歉，您未订阅该服务".to_owned()));
     }
     let chat_id = e.update.chat_id()?;
     e.api
@@ -96,7 +97,7 @@ pub async fn data_used_command(e: Event, _: State<ChatState>) -> anyhow::Result<
 
 pub async fn charge_cny_command(e: Event, _: State<ChatState>) -> anyhow::Result<Action> {
     if !is_in_group(&e) {
-        return Ok(Action::ReplyText(format!("抱歉，您未订阅该服务")));
+        return Ok(Action::ReplyText("抱歉，您未订阅该服务".to_owned()));
     }
     let chat_id = e.update.chat_id()?;
     e.api

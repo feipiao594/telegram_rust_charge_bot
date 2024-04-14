@@ -18,15 +18,13 @@ struct ExchangeRate {
 
 pub async fn get_exchange_rate_num() -> (f64, String) {
     let url = &config::get_instance().exchange_rate_url;
-    // println!("{}", &url);
-    let body = http::url_get(&url).await;
-    // println!("{}", body);
+    let body = http::url_get(url).await;
     match serde_json::from_str::<ExchangeRate>(&body) {
         Ok(parsed_json) => {
-            return (rounded_number(parsed_json.rates.cny, 4), parsed_json.date);
+            (rounded_number(parsed_json.rates.cny, 4), parsed_json.date)
         }
         Err(_) => {
-            return (NAN, "".to_string());
+            (NAN, "".to_string())
         }
     }
 }
