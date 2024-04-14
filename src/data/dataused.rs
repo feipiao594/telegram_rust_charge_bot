@@ -11,6 +11,7 @@ struct DataUsed {
 pub async fn get_used_data() -> String {
     let url = &config::get_instance().used_data_url;
     let body = http::url_get(url).await;
+    log::info!("request used data");
     // println!("{}", body);
     let gb2gib = 1.073741824;
     let byte2gb = 1000000000.0;

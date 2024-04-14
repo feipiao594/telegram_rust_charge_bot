@@ -26,3 +26,4 @@
 - event_trigger_time: 触发notion的时间，cron格式
 - max_store_charge_num: 历史记录存储的最大条数
 - subscribed_id_list: 数组，能使用该bot功能的人的chatid
+- help_message: 键入 /help 命令后提示的前排文字

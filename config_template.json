@@ -11,5 +11,6 @@
     "subscribed_id_list": [
         1145141919810,
         1234567890123
-    ]
+    ],
+    "help_message": "your_help_message"
 }

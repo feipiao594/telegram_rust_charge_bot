@@ -40,16 +40,10 @@ impl Config {
         let file_content =
             fs::read_to_string("./config.json").expect("LogRocket: error reading config file");
         match serde_json::from_str::<Config>(&file_content) {
-            Ok(parsed_json) => {
-                println!("Config: {:?}",parsed_json);
-                parsed_json
-            }
-            Err(_e) => {
-                // assert!(true, "Error parsing JSON: {}", e);
-                Config {
-                    ..Default::default()
-                }
-            }
+            Ok(parsed_json) => parsed_json,
+            Err(_e) => Config {
+                ..Default::default()
+            },
         }
     }
 }

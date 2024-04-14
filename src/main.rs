@@ -7,8 +7,10 @@ mod tools;
 
 #[tokio::main]
 async fn main() {
+    pretty_env_logger::init();
     let token = config::get_instance().bot_token.clone();
     let client = Client::new(token);
+    log::info!("starting bot");
     timer::timer_init().await.unwrap();
     // let mut router = Router::<()>::new(client);
 
