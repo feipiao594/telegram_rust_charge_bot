@@ -12,12 +12,14 @@ pub async fn timer_init() -> Result<(), JobSchedulerError> {
     sched
         .add(Job::new_async(cron, |_uuid, _l| {
             Box::pin(async move {
+                println!("test");
                 let token = config::get_instance().bot_token.clone();
                 let client = Client::new(token);
                 let chargecny_map = get_cron_charge_cny().await;
                 let (_, charge_str) = &chargecny_map;
+                println!("test 2");
                 let req = SendMessageRequest::new(
-                    (&config::get_instance().group_chat_id).clone(),
+                    config::get_instance().group_chat_id,
                     charge_str,
                 )
                 .with_reply_markup(api::ReplyMarkup::reply_keyboard_remove());

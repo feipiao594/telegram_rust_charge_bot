@@ -10,7 +10,7 @@ struct DataUsed {
 
 pub async fn get_used_data() -> String {
     let url = &config::get_instance().used_data_url;
-    let body = http::url_get(&url).await;
+    let body = http::url_get(url).await;
     // println!("{}", body);
     let gb2gib = 1.073741824;
     let byte2gb = 1000000000.0;
@@ -26,10 +26,10 @@ pub async fn get_used_data() -> String {
                 rounded_number(parsed_json.monthly_bw_limit_b / byte2gb - parsed_json.bw_counter_b / byte2gb,2),
                 rounded_number(parsed_json.bw_counter_b / parsed_json.monthly_bw_limit_b * 100.0,2)
             );
-            return result;
+            result
         }
         Err(e) => {
-            return format!("Error parsing JSON: {}", e);
+            format!("Error parsing JSON: {}", e)
         }
     }
 }
