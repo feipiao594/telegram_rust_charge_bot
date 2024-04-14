@@ -14,6 +14,7 @@ pub struct Config {
     pub event_trigger_time: String,
     pub max_store_charge_num: usize,
     pub subscribed_id_list: Vec<i64>,
+    pub help_message: String,
 }
 
 impl Default for Config {
@@ -29,6 +30,7 @@ impl Default for Config {
             event_trigger_time: "".to_string(),
             max_store_charge_num: 1,
             subscribed_id_list: vec![],
+            help_message: "".to_string(),
         }
     }
 }
