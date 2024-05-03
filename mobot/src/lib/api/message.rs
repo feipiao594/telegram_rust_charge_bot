@@ -2,7 +2,10 @@ use chrono::Utc;
 use mobot_derive::BotRequest;
 use serde::{Deserialize, Serialize};
 
-use super::{chat::Chat, sticker::Sticker, user::User, Document, PhotoSize, ReplyMarkup, API};
+use super::{
+    chat::Chat, reply_to_message::ReplyToMessage, sticker::Sticker, user::User, Document,
+    PhotoSize, ReplyMarkup, API,
+};
 
 /// `Message` represents a message sent in a chat. It can be a text message, a sticker, a photo, etc.
 /// <https://core.telegram.org/bots/api#message>
@@ -62,7 +65,7 @@ pub struct Message {
 
     /// For replies, the original message. Note that the Message object in this field will not contain further `reply_to_message` fields even if it itself is a reply.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reply_to_message: Option<i64>,
+    pub reply_to_message: Option<ReplyToMessage>,
 
     /// Sticker for messages with a sticker
     #[serde(skip_serializing_if = "Option::is_none")]
