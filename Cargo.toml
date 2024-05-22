@@ -13,6 +13,6 @@ surf = "2.3.2"
 openssl = { version = "0.10.64", features = ["vendored"] }
 log = "0.4"
 tokio-cron-scheduler = "0.10.0"
-mobot = { path = "./mobot" }
 anyhow = "1.0.81"
 pretty_env_logger = "0.5.0"
+mobot = { git = "https://github.com/0xfe/mobot.git", version = "0.3.10" }
