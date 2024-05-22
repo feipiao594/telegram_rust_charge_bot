@@ -1,3 +1,4 @@
+use chrono::{Datelike, Timelike, Utc};
 use serde::{Deserialize, Serialize};
 use std::{
     fs::{self, File},
@@ -13,7 +14,21 @@ struct StoreItem {
 }
 
 pub async fn push_charge_store(map: (String, String)) -> std::io::Result<()> {
-    let (date, charge_str) = map;
+    let (_, charge_str) = map;
+
+    let now = Utc::now();
+    let (is_pm, hour) = now.hour12();
+    let (_, year) = now.year_ce();
+    let date = format!(
+        "(UTC) {}-{:02}-{:02} {:02}:{:02}:{:02} {}",
+        year,
+        now.month(),
+        now.day(),
+        hour,
+        now.minute(),
+        now.second(),
+        if is_pm { "PM" } else { "AM" }
+    );
 
     let item = StoreItem {
         date: date.to_string(),
