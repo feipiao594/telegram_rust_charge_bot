@@ -6,14 +6,14 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version =  "1.8", features = ["rt-multi-thread", "macros"] }
-serde_json = "1.0.114"
-serde = "1.0.197"
+tokio = { version =  "1.40.0", features = ["rt-multi-thread", "macros"] }
+serde_json = "1.0.128"
+serde = "1.0.210"
 surf = "2.3.2"
-openssl = { version = "0.10.64", features = ["vendored"] }
-log = "0.4"
-tokio-cron-scheduler = "0.10.0"
-anyhow = "1.0.81"
+openssl = { version = "0.10.66", features = ["vendored"] }
+log = "0.4.22"
+tokio-cron-scheduler = "0.13.0"
+anyhow = "1.0.89"
 pretty_env_logger = "0.5.0"
-mobot = { git = "https://github.com/0xfe/mobot.git", version = "0.3.10" }
+mobot = { path = "./mobot" }
 chrono = "0.4.38"
