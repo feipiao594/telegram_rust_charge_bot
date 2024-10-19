@@ -454,6 +454,8 @@ impl<S: BotState> Router<S> {
                         .clone()
                 };
 
+                // info!("feipiao test message_event: {:?}", message_event);
+
                 // Run the handler
                 let reply = handler
                     .run(

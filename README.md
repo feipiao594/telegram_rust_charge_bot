@@ -27,3 +27,9 @@
 - max_store_charge_num: 历史记录存储的最大条数
 - subscribed_id_list: 数组，能使用该bot功能的人的chatid
 - help_message: 键入 /help 命令后提示的前排文字
+
+
+curl -X POST "https://api.telegram.org/bot7195745796:AAE_LCo2u34g-j2C04lq6Yfia5HNS3q4nFQ/sendPhoto" \
+     -F chat_id=6151998819 \
+     -F photo=@/home/feipiao/Pictures/nahida.jpg \
+     -F caption="This is a caption for the photo"

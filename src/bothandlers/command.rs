@@ -1,6 +1,8 @@
 use super::ChatState;
 use crate::data::*;
 use crate::tools::config;
+use api::SendPhotoRequest;
+
 use mobot::{
     api::{SendChatActionRequest, SendMessageRequest},
     *,
@@ -33,17 +35,17 @@ pub async fn help_command(e: Event, _: State<ChatState>) -> anyhow::Result<Actio
         .await?;
     // println!("send_message");
     e.api
-        .send_message(
-            &SendMessageRequest::new(
-                chat_id,
+        .send_url_photo(&SendPhotoRequest::new(
+            chat_id,
+            "https://feipiao594.github.io/images/background.jpg".to_string(),
+            Some(
                 _help_message.to_owned()
                     + "/help 显示该帮助信息 \n\
                         /exchangerate 查询当前汇率 \n\
                         /dataused 查询当前流量 \n\
                         /chargecny 查询最近缴额",
-            )
-            .with_reply_markup(api::ReplyMarkup::reply_keyboard_remove()),
-        )
+            ),
+        ))
         .await?;
     log::info!("send message: help, request id: {}", e.update.chat_id()?);
     Ok(Action::Done)
@@ -96,12 +98,15 @@ pub async fn data_used_command(e: Event, _: State<ChatState>) -> anyhow::Result<
             api::ChatAction::Typing,
         ))
         .await?;
+
+    let data = dataused::get_data_used().await.unwrap();
     // println!("send_message");
-    let message = dataused::get_used_data().await;
+    let message = dataused::get_used_data(data.clone()).await;
+
     e.api
-        .send_message(
-            &SendMessageRequest::new(chat_id, message)
-                .with_reply_markup(api::ReplyMarkup::reply_keyboard_remove()),
+        .send_local_photo(
+            &SendPhotoRequest::new(chat_id, "image.jpg".to_string(), Some(message)),
+            dataused::get_used_data_img(data.clone()).await?,
         )
         .await?;
     log::info!(
