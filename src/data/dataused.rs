@@ -1,4 +1,5 @@
 use crate::data::rounded_number;
+use crate::tools::config::get_font_family_name;
 use crate::tools::{config, http};
 use charts_rs::{svg_to_jpeg, PieChart};
 use serde;
@@ -39,7 +40,7 @@ pub async fn get_used_data_img(m_data_used: DataUsed) -> anyhow::Result<Vec<u8>>
     let byte2gb = 1000000000.0;
     let raw_json = r###"{
             "border_radius": 8,
-            "font_family": "Noto Sans CJK JP",
+            "font_family": {{font_family}},
             "height": 400,
             "inner_radius": 30,
             "legend_align": "right",
@@ -103,6 +104,7 @@ pub async fn get_used_data_img(m_data_used: DataUsed) -> anyhow::Result<Vec<u8>>
             "x_axis_height": 30
         }"###;
     let formatted_json = raw_json
+        .replace("{{font_family}}", &get_font_family_name())
         .replace(
             "{{Used}}",
             &format!("{}", rounded_number(m_data_used.bw_counter_b / byte2gb, 2)),

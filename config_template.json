@@ -12,6 +12,6 @@
         1145141919810,
         1234567890123
     ],
-    "font_path": "/path/to/yourfont.ttc",
+    "font_path": "/path/to/yourfont.ttc or /path/to/yourfont.otf",
     "help_message": "your_help_message"
 }

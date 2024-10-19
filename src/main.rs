@@ -1,5 +1,6 @@
 use bothandlers::*;
 use charts_rs::get_or_try_init_fonts;
+use log::info;
 use mobot::*;
 use tokio::fs;
 use tools::{config, timer};
@@ -15,6 +16,8 @@ async fn main() {
         .await
         .unwrap();
     let _ = get_or_try_init_fonts(Some(vec![&buf]));
+    info!("font family: {}", tools::config::get_font_family_name());
+    // println!("read fonts finish {:#?}", charts_rs::get_font_families());
     log::info!("read fonts finish");
     let token = config::get_instance().bot_token.clone();
     let client = Client::new(token);

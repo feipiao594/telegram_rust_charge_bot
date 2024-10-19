@@ -1,5 +1,7 @@
 use std::fs;
 
+use charts_rs::get_font_families;
+
 static mut INSTANCE: Option<Config> = None;
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -57,4 +59,14 @@ pub fn get_instance() -> &'static Config {
         }
         INSTANCE.as_ref().unwrap()
     }
+}
+
+pub fn get_font_family_name() -> String {
+    let vec = get_font_families().unwrap();
+    for item in vec.iter() {
+        if !item.contains("Roboto") {
+            return item.to_string();
+        }
+    }
+    "Roboto".to_string()
 }
