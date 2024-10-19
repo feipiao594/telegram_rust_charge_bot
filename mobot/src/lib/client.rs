@@ -3,6 +3,7 @@ use std::fmt::{self, Formatter};
 use anyhow::Result;
 use bytes;
 use derive_more::*;
+use reqwest::multipart;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::api::ApiResponse;
@@ -129,5 +130,28 @@ impl Client {
             .await?;
         debug!("File downloaded successfully /{}:\n", file_path,);
         Ok(body)
+    }
+
+    /// Send `method` with `req` as the request body to the Telegram API.
+    pub async fn multipart_post<Resp>(&self, method: &str, req: multipart::Form) -> Result<Resp>
+    where
+        Resp: Serialize + DeserializeOwned + Clone,
+    {
+        debug!("POST /{}:\n{:#?}", method, &req);
+        let body = self
+            .client
+            .post(format!("{}/{}", self.base_url, method))
+            .multipart(req)
+            .send()
+            .await?
+            .text()
+            .await?;
+        let response = ApiResponse::<Resp>::from_str(&body)?;
+        debug!(
+            "Response /{}:\n{}",
+            method,
+            serde_json::to_string_pretty(&response).unwrap()
+        );
+        Ok(response.result()?.clone())
     }
 }
