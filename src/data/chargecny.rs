@@ -1,10 +1,10 @@
 use crate::data::exchangerate::get_exchange_rate_num;
 use crate::data::rounded_number;
-use crate::tools::charge_store::get_recent_store;
 use crate::tools::config;
+use crate::tools::history::get_recent_last_history;
 
 pub async fn get_recent_charge_cny() -> String {
-    get_recent_store().await.unwrap()
+    get_recent_last_history().await.unwrap()
 }
 
 pub async fn get_cron_charge_cny() -> (String, String) {

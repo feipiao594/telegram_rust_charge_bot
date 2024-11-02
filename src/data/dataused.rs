@@ -6,23 +6,26 @@ use serde;
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct DataUsed {
-    monthly_bw_limit_b: f64,
-    bw_counter_b: f64,
+    pub monthly_bw_limit_b: f64,
+    pub bw_counter_b: f64,
+    pub bw_reset_day_of_month: f64,
 }
 
 pub async fn get_data_used() -> anyhow::Result<DataUsed> {
     let url = &config::get_instance().used_data_url;
     let body = http::url_get(url).await;
     log::info!("request used data");
-    // println!("{}", body);
+    println!("{}", body);
 
     let m_data_used = serde_json::from_str::<DataUsed>(&body).unwrap();
+    println!("{:?}", m_data_used);
     Ok(m_data_used)
 }
 
 pub async fn get_used_data(m_data_used: DataUsed) -> String {
     let gb2gib = 1.073741824;
     let byte2gb = 1000000000.0;
+    let _ = m_data_used.bw_reset_day_of_month;
     let result = format!(
                 "每月总额: {:.2} GiB = {:.2} GB\n已用流量: {:.2} GiB = {:.2} GB\n剩余流量: {:.2} GiB = {:.2} GB\n已使用率: {:.2} %\n",
                 rounded_number(m_data_used.monthly_bw_limit_b / byte2gb / gb2gib,2),
@@ -40,7 +43,7 @@ pub async fn get_used_data_img(m_data_used: DataUsed) -> anyhow::Result<Vec<u8>>
     let byte2gb = 1000000000.0;
     let raw_json = r###"{
             "border_radius": 8,
-            "font_family": {{font_family}},
+            "font_family": "{{font_family}}",
             "height": 400,
             "inner_radius": 30,
             "legend_align": "right",
@@ -103,6 +106,7 @@ pub async fn get_used_data_img(m_data_used: DataUsed) -> anyhow::Result<Vec<u8>>
             "x_axis_font_size": 16,
             "x_axis_height": 30
         }"###;
+    println!("{}", get_font_family_name());
     let formatted_json = raw_json
         .replace("{{font_family}}", &get_font_family_name())
         .replace(
@@ -119,7 +123,7 @@ pub async fn get_used_data_img(m_data_used: DataUsed) -> anyhow::Result<Vec<u8>>
                 )
             ),
         );
-
+    println!("{}", formatted_json);
     let bar_chart = PieChart::from_json(&formatted_json)?;
     Ok(svg_to_jpeg(&bar_chart.svg().unwrap()).unwrap())
 }
