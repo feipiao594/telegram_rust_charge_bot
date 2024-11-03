@@ -24,6 +24,7 @@
 - used_data_url: 流量使用情况的查询api
 - exchange_rate_url: 查询汇率的api
 - event_trigger_time: 触发notion的时间，cron格式
+- daily_cron_time: 每月自动查询并存储使用率的时间
 - max_store_charge_num: 历史记录存储的最大条数
 - subscribed_id_list: 数组，能使用该bot功能的人的chatid
 - font_path: 你字体的路径

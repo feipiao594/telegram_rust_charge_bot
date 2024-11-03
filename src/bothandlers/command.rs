@@ -105,7 +105,6 @@ pub async fn data_used_command(e: Event, _: State<ChatState>) -> anyhow::Result<
         .await?;
 
     let data = dataused::get_data_used().await.unwrap();
-    println!("send_message");
     let message = dataused::get_used_data(data.clone()).await;
 
     e.api
@@ -191,11 +190,11 @@ pub async fn charge_record_command(e: Event, _: State<ChatState>) -> anyhow::Res
             .await?;
     } else {
         let his = get_history().await.unwrap();
-        let test = get_record_img(get_current_checks(&his)).unwrap();
+        let temp_img = get_record_img(get_current_checks(&his)).unwrap();
         e.api
             .send_local_photo(
                 &SendPhotoRequest::new(chat_id, "image.jpg".to_string(), None),
-                test,
+                temp_img,
             )
             .await?;
     }

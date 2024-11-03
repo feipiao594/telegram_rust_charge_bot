@@ -36,17 +36,17 @@ pub fn get_record_img(vec: &Vec<CheckInstance>) -> anyhow::Result<Vec<u8>> {
                                 "legend_category": "round rect",
                                 "legend_font_size": 16,
                                 "legend_margin": {
-                                "left": 0,
-                                "top": 5,
-                                "right": 0,
-                                "bottom": 0
+                                    "left": 0,
+                                    "top": 5,
+                                    "right": 0,
+                                    "bottom": 0
                                 },
                                 "legend_show": true,
                                 "margin": {
-                                "left": 15,
-                                "top": 10,
-                                "right": 50,
-                                "bottom": 5
+                                    "left": 15,
+                                    "top": 10,
+                                    "right": 50,
+                                    "bottom": 5
                                 },
                                 "quality": 80,
                                 "series_list": [
@@ -95,10 +95,10 @@ pub fn get_record_img(vec: &Vec<CheckInstance>) -> anyhow::Result<Vec<u8>> {
                                 "title_font_weight": "bold",
                                 "title_height": 30,
                                 "title_margin": {
-                                "left": 0,
-                                "top": 0,
-                                "right": 0,
-                                "bottom": 0
+                                    "left": 0,
+                                    "top": 0,
+                                    "right": 0,
+                                    "bottom": 0
                                 },
                                 "title_text": "JMS 流量使用",
                                 "type": "line",
@@ -108,17 +108,17 @@ pub fn get_record_img(vec: &Vec<CheckInstance>) -> anyhow::Result<Vec<u8>> {
                                 "x_axis_height": 30,
                                 "x_axis_hidden": false,
                                 "x_axis_margin": {
-                                "left": 0,
-                                "top": 0,
-                                "right": 0,
-                                "bottom": 0
+                                    "left": 0,
+                                    "top": 0,
+                                    "right": 0,
+                                    "bottom": 0
                                 },
                                 "x_axis_name_gap": 5,
                                 "x_axis_name_rotate": 0,
                                 "x_boundary_gap": true,
                                 "y_axis_hidden": false
                             }"###;
-    println!("{:?}", raw_json);
+    // println!("{:?}", raw_json);
     let formatted_json = raw_json
         .replace("{{font_family}}", &get_font_family_name())
         .replace("{{daily_gb}}", &daily_gb)
