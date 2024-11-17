@@ -1,4 +1,4 @@
-use chrono::{Datelike, Timelike, Utc};
+use chrono::{DateTime, Datelike, Timelike, Utc};
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -9,6 +9,7 @@ use std::{
 use crate::data::dataused::DataUsed;
 
 use super::config;
+use std::sync::Mutex;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct StoreItem {
@@ -93,20 +94,37 @@ where
 
 pub async fn append_checks(data_used: DataUsed) -> std::io::Result<()> {
     change_history(|old_history: History| -> anyhow::Result<History> {
-        let mut store = old_history;
-        let last_used_data = match store.current_checks.last() {
-            Some(last) => last.total_used_data,
-            None => 0.0,
-        };
-        let now = Utc::now();
-        let check = CheckInstance {
-            today_used_data: data_used.bw_counter_b - last_used_data,
-            total_used_data: data_used.bw_counter_b,
-            max_data: data_used.monthly_bw_limit_b,
-            date: format!("{}.{}", now.month(), now.day()),
-        };
-        store.current_checks.push(check);
-        Ok(store)
+        lazy_static::lazy_static! {
+            static ref LAST_CHECKS_TIME: Mutex<Option<DateTime<Utc>>> = Mutex::new(None);
+            static ref LAST_USED_DATA: Mutex<f64> = Mutex::new(0.0);
+        }
+        {
+            let mut last_checks_time = LAST_CHECKS_TIME.lock().unwrap();
+            let mut last_used_data = LAST_USED_DATA.lock().unwrap();
+
+            let mut store = old_history;
+            if last_checks_time.is_none() {
+                *last_used_data = match store.current_checks.last() {
+                    Some(last) => last.total_used_data,
+                    None => 0.0,
+                };
+            }
+            let now = Utc::now();
+            let check = CheckInstance {
+                today_used_data: data_used.bw_counter_b - *last_used_data,
+                total_used_data: data_used.bw_counter_b,
+                max_data: data_used.monthly_bw_limit_b,
+                date: format!("{}.{}", now.month(), now.day()),
+            };
+            if let Some(last_time) = *last_checks_time {
+                if last_time.day() == (now - chrono::Duration::days(1)).day() {
+                    store.current_checks.push(check);
+                }
+            }
+            *last_checks_time = Some(now);
+            *last_used_data = data_used.bw_counter_b;
+            Ok(store)
+        }
     })
     .await
 }

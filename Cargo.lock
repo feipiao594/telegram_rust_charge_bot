@@ -3043,6 +3043,7 @@ dependencies = [
  "charts-rs",
  "chrono",
  "image",
+ "lazy_static",
  "log",
  "mobot",
  "openssl",

@@ -19,3 +19,4 @@ mobot = { path = "./mobot" }
 chrono = "0.4.38"
 image = "0.25.4"
 charts-rs = { version = "0.3.18", features = ["image", "image-encoder"] }
+lazy_static = "1.5.0"
