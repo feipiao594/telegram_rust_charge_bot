@@ -15,10 +15,10 @@ pub async fn get_data_used() -> anyhow::Result<DataUsed> {
     let url = &config::get_instance().used_data_url;
     let body = http::url_get(url).await;
     log::info!("request used data");
-    println!("{}", body);
+    // println!("{}", body);
 
     let m_data_used = serde_json::from_str::<DataUsed>(&body).unwrap();
-    println!("{:?}", m_data_used);
+    // println!("{:?}", m_data_used);
     Ok(m_data_used)
 }
 

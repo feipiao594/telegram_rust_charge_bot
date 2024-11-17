@@ -39,18 +39,18 @@ pub async fn help_command(e: Event, _: State<ChatState>) -> anyhow::Result<Actio
         .await?;
     // println!("send_message");
     e.api
-        .send_url_photo(&SendPhotoRequest::new(
-            chat_id,
-            "https://feipiao594.github.io/images/background.jpg".to_string(),
-            Some(
+        .send_message(
+            &SendMessageRequest::new(
+                chat_id,
                 _help_message.to_owned()
                     + "/help 显示该帮助信息 \n\
-                        /exchangerate 查询当前汇率 \n\
-                        /record 查询最近使用率 \n\
-                        /dataused 查询当前流量 \n\
-                        /chargecny 查询最近缴额",
-            ),
-        ))
+                /exchangerate 查询当前汇率 \n\
+                /record 查询最近使用率 \n\
+                /dataused 查询当前流量 \n\
+                /chargecny 查询最近缴额",
+            )
+            .with_reply_markup(api::ReplyMarkup::reply_keyboard_remove()),
+        )
         .await?;
     log::info!("send message: help, request id: {}", e.update.chat_id()?);
     Ok(Action::Done)
